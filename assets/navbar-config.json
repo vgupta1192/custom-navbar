@@ -1,0 +1,40 @@
+{
+    "title": "Custom Navbar",
+    "labels": [
+        {
+            "name":"Home",
+            "href":"#"
+        },
+        {
+            "name":"About",
+            "href":"#"
+        },
+        {
+            "name":"Services",
+            "href":"#"
+        },
+        {
+            "name":"Contact",
+            "href":"#"
+        }
+    ],
+    "isResponsiveToggle": "No",
+    "isDropDown":"No",
+    "dropdowns": [
+        {
+            "name": "DropDown",
+            "href": "#",
+            "links": [
+                {
+                    "name":"About",
+                    "href":"#"
+                },
+                {
+                    "name":"Contact",
+                    "href":"#"
+                }
+            ]
+        }
+    ],
+    "navColor":"cyan"
+}
