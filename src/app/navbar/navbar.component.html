@@ -1,0 +1,40 @@
+        <nav class="navbar navbar-expand-sm" [ngClass]="navColor">
+        <div class="container">
+          <a href="#" class="navbar-brand">{{title}}</a>
+          <button *ngIf="isResponsiveToggle" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+          <div *ngIf="isResponsiveToggle"  class="navbar-collapse collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                  <li class="nav-item" *ngFor="let nav of navItems">
+                      <a href="nav.href" class="nav-link">{{nav.name}}</a>
+                  </li>
+                  <div *ngIf="isDropDown">
+                  <li class="nav-item dropdown" *ngFor="let dropdown of dropdowns">
+                      <a href="{{dropdown.href}}" class="dropdown-toggle nav-link" data-toggle="dropdown">{{dropdown.name}}</a>
+                      <div class="dropdown-menu">
+                        <div *ngFor="let dropdownlink of dropdown.links">
+                        <a href="{{dropdownlink.href}}" class="dropdown-item">{{dropdownlink.name}}</a>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
+              </ul>
+              </div>
+              <div *ngIf="!isResponsiveToggle">
+                  <ul class="navbar-nav">
+                      <li class="nav-item" *ngFor="let nav of navItems">
+                          <a href="nav.href" class="nav-link">{{nav.name}}</a>
+                      </li>
+                      <div *ngIf="isDropDown">
+                      <li class="nav-item dropdown" *ngFor="let dropdown of dropdowns">
+                          <a href="{{dropdown.href}}" class="dropdown-toggle nav-link" data-toggle="dropdown">{{dropdown.name}}</a>
+                          <div class="dropdown-menu">
+                            <div *ngFor="let dropdownlink of dropdown.links">
+                            <a href="{{dropdownlink.href}}" class="dropdown-item">{{dropdownlink.name}}</a>
+                            </div>
+                          </div>
+                        </li>
+                      </div>
+                  </ul>
+              </div>
+          </div>
+    </nav>
