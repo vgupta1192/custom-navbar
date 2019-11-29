@@ -1,27 +1,151 @@
-# CustomNavbar
+# Custom Navigation Bar
+Custom Navigation Bar App based on angular with Material Bootstrap.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.1.
+## Demo
+You may want to have a look at the demo: https://vgupta1192.github.io/custom-navbar/
 
-## Development server
+### Dependencies
+```
+npm install --save angularx-qrcode angular-bootstrap-md font-awesome hammerjs chart.js@2.5.0
+```
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### App Details
+```
+App can be used to generate custom navigation bar with option to change the look and feel of the bar using configuration file.
+```
 
-## Code scaffolding
+### navbar.component.html
+``` html
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+        <nav class="navbar navbar-expand-sm" [ngClass]="navColor">
+        <div class="container">
+          <a href="#" class="navbar-brand">{{title}}</a>
+          <button *ngIf="isResponsiveToggle" class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+          <div *ngIf="isResponsiveToggle"  class="navbar-collapse collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                  <li class="nav-item" *ngFor="let nav of navItems">
+                      <a href="nav.href" class="nav-link">{{nav.name}}</a>
+                  </li>
+                  <div *ngIf="isDropDown">
+                  <li class="nav-item dropdown" *ngFor="let dropdown of dropdowns">
+                      <a href="{{dropdown.href}}" class="dropdown-toggle nav-link" data-toggle="dropdown">{{dropdown.name}}</a>
+                      <div class="dropdown-menu">
+                        <div *ngFor="let dropdownlink of dropdown.links">
+                        <a href="{{dropdownlink.href}}" class="dropdown-item">{{dropdownlink.name}}</a>
+                        </div>
+                      </div>
+                    </li>
+                  </div>
+              </ul>
+              </div>
+              <div *ngIf="!isResponsiveToggle">
+                  <ul class="navbar-nav">
+                      <li class="nav-item" *ngFor="let nav of navItems">
+                          <a href="nav.href" class="nav-link">{{nav.name}}</a>
+                      </li>
+                      <div *ngIf="isDropDown">
+                      <li class="nav-item dropdown" *ngFor="let dropdown of dropdowns">
+                          <a href="{{dropdown.href}}" class="dropdown-toggle nav-link" data-toggle="dropdown">{{dropdown.name}}</a>
+                          <div class="dropdown-menu">
+                            <div *ngFor="let dropdownlink of dropdown.links">
+                            <a href="{{dropdownlink.href}}" class="dropdown-item">{{dropdownlink.name}}</a>
+                            </div>
+                          </div>
+                        </li>
+                      </div>
+                  </ul>
+              </div>
+          </div>
+    </nav>
+	
+```
+### navbar.component.ts
+``` typescript
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CustomNavbar } from './custom-navbar';
 
-## Build
+@Component({
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css']
+})
+export class NavbarComponent implements OnInit {
+  navbarTitle: CustomNavbar;
+  title: string;
+  navItems: any[];
+  isResponsiveToggle: boolean;
+  isDropDown: boolean;
+  dropdowns: any[];
+  navColor: string;
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+  constructor(private httpService: HttpClient) { }
 
-## Running unit tests
+  ngOnInit() {
+    this.title = '';
+    this.httpService.get('./assets/navbar-config.json').subscribe(
+      data => {
+        this.navbarTitle = data as CustomNavbar;	 // FILL THE ARRAY WITH DATA.
+        this.title = this.navbarTitle.title;
+        this.navItems = this.navbarTitle.labels;
+        this.isResponsiveToggle = this.navbarTitle.isResponsiveToggle === 'Yes' ? true : false;
+        this.isDropDown = this.navbarTitle.isDropDown === 'Yes' ? true : false;
+        this.dropdowns = this.navbarTitle.dropdowns;
+        if (this.navbarTitle.navColor === 'red') {
+          this.navColor = 'navbar-dark bg-danger';
+        } else if (this.navbarTitle.navColor === 'yellow') {
+          this.navColor = 'navbar-dark bg-warning';
+        } else if (this.navbarTitle.navColor === 'green') {
+          this.navColor = 'navbar-dark bg-success';
+        } else if (this.navbarTitle.navColor === 'black') {
+          this.navColor = 'navbar-dark bg-dark';
+        } else if (this.navbarTitle.navColor === 'blue') {
+          this.navColor = 'navbar-dark bg-primary';
+        } else if (this.navbarTitle.navColor === 'cyan') {
+          this.navColor = 'navbar-dark bg-info';
+        } else {
+          this.navColor = 'navbar-light bg-light';
+        }
+      }
+    );
+  }
+}
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+```
+### custom-navbar.ts
+``` typescript
+export interface CustomNavbar {
+    title: string;
+    labels: string[];
+    isResponsiveToggle: string;
+    isDropDown: string;
+    dropdowns: any[];
+    navColor: string;
+}
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
+### app.module.ts
+```
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-## Further help
+import { AppComponent } from './app.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+@NgModule({
+  declarations: [
+    AppComponent,
+    NavbarComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
